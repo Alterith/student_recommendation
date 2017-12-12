@@ -19,6 +19,7 @@ data2:pd.DataFrame = pd.read_csv('HumanitiesData.csv', sep = ',')
 data3:pd.DataFrame = pd.read_csv('CoursePoints.csv', sep = ',')
 matric_subjects = data2.Test_Segment_Name.unique().tolist()
 varsity_courses = data2.Unit_Code.unique().tolist()
+data = data[data['support']>=0.125]
 # =============================================================================
 # format data
 # =============================================================================
@@ -48,17 +49,38 @@ course_rules = []
 for i in range(0, len(rules)):
     matric_rules.append([x for x in rules[i] if not any(x1.isdigit() for x1 in x)])
     course_rules.append([x for x in rules[i] if x not in matric_rules[i]])
-
+# =============================================================================
+# final list of valid rules
+# =============================================================================
 final_rules = list(zip(matric_rules, course_rules))
 
-test = random.sample(matric_subjects, 7)
+# =============================================================================
+# =============================================================================
+# =============================================================================
+# =============================================================================
+# # # # testing methodology
+# =============================================================================
+# =============================================================================
+# =============================================================================
+# =============================================================================
+matric_test = random.sample(matric_subjects, 7)
 
 reccommended_subjects = []
 for i in range(0, len(final_rules)):
-    if(set(final_rules[i][0]).issubset(set(test))):
+    if(set(final_rules[i][0]).issubset(set(matric_test))):
         reccommended_subjects = list(set(reccommended_subjects) | set(final_rules[i][1])) 
-        #print(final_rules[i][1])
 
+pathways:pd.DataFrame = pd.read_csv('Final data/BAGeneral.csv', sep=',')
+pathways = pathways.fillna(0)
+pathways = pathways.values.tolist()
+
+j = 0
+for i in range(0, len(pathways)):
+    pathways[i] = [x for x in pathways[i] if not isinstance(x, int)]
+    if(set(pathways[i]).issubset(reccommended_subjects)):
+        j = j+1
+
+    
     
     
 
